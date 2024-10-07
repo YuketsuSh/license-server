@@ -1,5 +1,22 @@
 const jwt = require('jsonwebtoken');
-const licenses = require('../config/default.json');
+const fs = require('fs');
+const path = require('path');
+const licensesFilePath = path.join(__dirname, '../data/licenses.json');
+
+
+const loadLicenses = () => {
+    if (!fs.existsSync(licensesFilePath)) {
+        return [];
+    }
+    const data = fs.readFileSync(licensesFilePath);
+    return JSON.parse(data);
+};
+
+const saveLicenses = (licenses) => {
+    fs.writeFileSync(licensesFilePath, JSON.stringify(licenses, null, 2));
+};
+
+const licenses = loadLicenses();
 
 const generateLicense = (req, res) => {
     const { user, domain, ipAddress } = req.body;
@@ -10,6 +27,7 @@ const generateLicense = (req, res) => {
 
     const licenseKey = jwt.sign({ user, domain, ipAddress }, process.env.LICENSE_SECRET, { expiresIn: '1y' });
     licenses.push({ user, domain, ipAddress, licenseKey });
+    saveLicenses(licenses);
     res.status(201).json({ licenseKey });
 };
 
@@ -46,6 +64,7 @@ const revokeLicense = (req, res) => {
   }
 
   licenses.splice(licenseIndex, 1);
+  saveLicenses(licenses);
   res.status(200).json({ message: 'License was revoked successfully' });
 };
 
