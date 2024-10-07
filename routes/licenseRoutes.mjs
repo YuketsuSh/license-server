@@ -1,5 +1,5 @@
-const express = require('express');
-const { generateLicense, validateLicense, revokeLicense, listLicenses } = require('../controllers/licenseController');
+import express from 'express';
+import { generateLicense, validateLicense, revokeLicense, listLicenses } from '../controllers/licenseController.mjs';
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post('/revoke', revokeLicense);
 router.get('', listLicenses);
 
 
-module.exports = router;
+export default router;
