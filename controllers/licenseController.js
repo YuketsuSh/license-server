@@ -37,4 +37,17 @@ const validateLicense = (req, res) => {
     }
 };
 
-module.exports = { generateLicense, validateLicense };
+const revokeLicense = (req, res) => {
+  const { licenseKey } = req.body;
+  const licenseIndex = licenses.findIndex((lic) => lic.licenseKey === licenseKey);
+
+  if (licenseIndex === -1) {
+      return res.status(404).json({ message: 'License not found' });
+  }
+
+  licenses.splice(licenseIndex, 1);
+  res.status(200).json({ message: 'License was revoked successfully' });
+};
+
+
+module.exports = { generateLicense, validateLicense, revokeLicense };
