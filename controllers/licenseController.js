@@ -49,5 +49,8 @@ const revokeLicense = (req, res) => {
   res.status(200).json({ message: 'License was revoked successfully' });
 };
 
+const listLicenses = (req, res) => {
+  res.status(200).json(licenses);
+};
 
-module.exports = { generateLicense, validateLicense, revokeLicense };
+module.exports = { generateLicense, validateLicense, revokeLicense, listLicenses };
