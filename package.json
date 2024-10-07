@@ -1,0 +1,25 @@
+{
+  "name": "license-server",
+  "version": "1.0.0",
+  "description": "This open-source project provides a basic implementation of a license server designed to generate and validate software licenses",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YuketsuSh/license-server.git"
+  },
+  "author": "Yuketsu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YuketsuSh/license-server/issues"
+  },
+  "homepage": "https://github.com/YuketsuSh/license-server#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
