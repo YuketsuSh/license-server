@@ -12,7 +12,9 @@ export const generateLicense = async (req, res) => {
 
     try {
         const newLicense = await License.create({ user, domain, ipAddress, licenseKey });
-        res.status(201).json({ licenseKey: newLicense.licenseKey });
+        res.status(201).json({
+            message: 'License generated successfully.',
+            licenseKey: newLicense.licenseKey });
     } catch (error) {
         res.status(500).json({ error: 'Error generating license' });
     }
