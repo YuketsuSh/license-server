@@ -48,6 +48,14 @@ The server allows clients to:
 
 ## API Endpoints
 
+All endpoints require a license secret that must be provided in the request headers:
+
+  ```json
+  "x-license-secret: your_license_secret"
+  ```
+
+This secret license key ensures that the request is legitimate and validates the generation, validation, and management of the license.
+
 ### 1. License Generation
 - **POST** `/generate`
 
@@ -59,7 +67,6 @@ The server allows clients to:
     "user": "client_name",
     "domain": "client-domain.com",
     "ipAddress": "your-server-ip",
-    "licenseSecret": "your_license_secret"
   }
   ```
 
