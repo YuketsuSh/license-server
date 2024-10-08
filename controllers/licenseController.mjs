@@ -66,3 +66,38 @@ export const listLicenses = async (req, res) => {
         res.status(500).json({ error: 'Error fetching licenses' });
     }
 };
+
+export const editLicense = async (req, res) => {
+    const { licenseKey, newDomain, newIpAddress, regenerateKey } = req.body;
+
+    if (!licenseKey || !newDomain || !newIpAddress || !newIpAddress) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    try {
+        const license = await License.findOne({where: { licenseKey }});
+
+        if (!license){
+            return res.status(404).json({ message: 'License not found' });
+        }
+
+        license.domain = newDomain;
+        license.ipAddress = newIpAddress;
+
+        if (regenerateKey) {
+            const newLicenseKey = jwt.sign({user: license.user, domain: license.domain});
+            license.licenseKey = newLicenseKey;
+        }
+
+        await license.save();
+
+        res.status(200).json({
+            message: 'License updated successfully',
+            licenseKey: license.licenseKey,
+            domain: license.domain,
+            ipAddress: license.ipAddress
+        });
+    }catch (error){
+        res.status(500).json({error: 'Error updating license'});
+    }
+};
