@@ -101,3 +101,33 @@ export const editLicense = async (req, res) => {
         res.status(500).json({error: 'Error updating license'});
     }
 };
+
+export const regenerateLicense = async (req, res) => {
+  const { domain } = req.body;
+
+  if (!domain) {
+      return res.status(400).json({error: 'Missing required field: domain'});
+  }
+
+  try {
+      const license = await License.findOne({where: { domain }});
+
+      if (!license){
+          return res.status(404).json({message: 'License not found for the provider'});
+      }
+
+      const newLicenseKey = jwt.sign({user: license.user, domain: license.domain, ipAddress: license.ipAddress}, process.env.LICENSE_SECRET, { expiresIn: '1y' });
+
+      license.licenseKey = newLicenseKey;
+      await license.save();
+
+      res.status(200).json({
+          message: 'License regenerated successfully',
+          newLicenseKey: license.licenseKey
+      });
+
+  }catch (error){
+      res.status(500).json({error: 'Error regenerating license'});
+  }
+
+};
