@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import License from '../models/License.mjs';
+import {Op} from "sequelize";
 
 export const generateLicense = async (req, res) => {
     const { user, domain, ipAddress } = req.body;
@@ -8,13 +9,21 @@ export const generateLicense = async (req, res) => {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const licenseKey = jwt.sign({ user, domain, ipAddress }, process.env.LICENSE_SECRET, { expiresIn: '1y' });
-
     try {
+        const existingLicense = await License.findOne({
+            where: {
+                [Op.or]: [{ domain }, { ipAddress }]
+            }
+        });
+
+        if (existingLicense) {
+            return res.status(400).json({ error: 'Domain or IP address is already in use for another license' });
+        }
+
+        const licenseKey = jwt.sign({ user, domain, ipAddress }, process.env.LICENSE_SECRET, { expiresIn: '1y' });
+
         const newLicense = await License.create({ user, domain, ipAddress, licenseKey });
-        res.status(201).json({
-            message: 'License generated successfully.',
-            licenseKey: newLicense.licenseKey });
+        res.status(201).json({ licenseKey: newLicense.licenseKey });
     } catch (error) {
         res.status(500).json({ error: 'Error generating license' });
     }
