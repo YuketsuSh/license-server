@@ -58,7 +58,7 @@ The server allows clients to:
   {
     "user": "client_name",
     "domain": "client-domain.com",
-    "ipAddress": "195.154.172.105",
+    "ipAddress": "your-server-ip",
     "licenseSecret": "your_license_secret"
   }
   ```
@@ -80,7 +80,7 @@ The server allows clients to:
   {
     "licenseKey": "jwt_license_key",
     "domain": "client-domain.com",
-    "ipAddress": "your-server-ip",
+    "ipAddress": "client-ip-server",
     "licenseSecret": "your_license_secret"
   }
   ```
